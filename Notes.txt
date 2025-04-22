@@ -1,0 +1,16 @@
+// ...existing code...
+let filtered = files.filter(f => 
+    f.brand === brand && 
+    (f.country === country || f.Country === country) && 
+    !(f.name && f.name.includes('!'))
+);
+
+//files_by_brand.html
+
+If the field in List.csv is a list of strings separated by commas (e.g. "A,B,C"), you can check if an item is present using JavaScript’s split and includes methods:
+
+// Suppose f.tags is the field with comma-separated values
+const tags = (f.tags || "").split(",").map(s => s.trim());
+if (tags.includes("itemToCheck")) {
+    // item is present
+}

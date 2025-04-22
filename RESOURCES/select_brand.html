@@ -1,0 +1,147 @@
+<!-- Brand selection page HTML -->
+<html>
+
+<head>
+    <title>Select Brand</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            background: #181a1b !important;
+            color: #e0e0e0 !important;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+        }
+
+        header {
+            background: #003366;
+            color: #fff;
+            padding: 30px 0 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px #e0e6ed;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            color: #d32f2f;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #23272b !important;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px #1113 !important;
+            padding: 40px 30px;
+            text-align: center;
+            color: #e0e0e0 !important;
+        }
+
+        select {
+            font-size: 1.1em;
+            padding: 10px 18px;
+            border-radius: 5px;
+            background: #23272b !important;
+            color: #e0e0e0 !important;
+            border: 1px solid #444 !important;
+            margin-bottom: 20px;
+        }
+
+        select:focus {
+            background: #23272b !important;
+            color: #fff !important;
+            border-color: #0055cc !important;
+        }
+
+        button {
+            background: #0055cc !important;
+            color: #fff !important;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 22px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #003366 !important;
+        }
+
+        .text-primary,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #4fc3f7 !important;
+        }
+
+        a,
+        .switch-link,
+        .logout-link,
+        .back-link {
+            color: #4fc3f7 !important;
+        }
+
+        .msg {
+            color: #ff5252 !important;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+            // Fetch brands with token
+            const res = await fetch('/files', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.status === 401) {
+                localStorage.removeItem('access_token');
+                window.location.href = '/login';
+                return;
+            }
+            const files = await res.json();
+            const brands = [...new Set(files.map(f => f.brand))].sort();
+            const select = document.getElementById('brand-select');
+            brands.forEach(brand => {
+                const opt = document.createElement('option');
+                opt.value = brand;
+                opt.textContent = brand;
+                select.appendChild(opt);
+            });
+        });
+        function goToBrand(e) {
+            e.preventDefault();
+            const brand = document.getElementById('brand-select').value;
+            if (brand) window.location.href = '/brand?brand=' + encodeURIComponent(brand);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Select a Brand</h1>
+    </header>
+    <div class='container'>
+        <form onsubmit="goToBrand(event)">
+            <select id="brand-select" name='brand' required>
+                <option value='' disabled selected>Select a brand</option>
+            </select><br>
+            <button type='submit'>Show Files</button>
+        </form>
+    </div>
+</body>
+
+</html>

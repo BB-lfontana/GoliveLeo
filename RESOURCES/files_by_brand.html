@@ -1,0 +1,344 @@
+<!-- Files by brand HTML with token check and fetch -->
+<html>
+
+<head>
+    <title>Files for Brand</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            background: #181a1b !important;
+            color: #e0e0e0 !important;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+        }
+
+        .container,
+        .card,
+        .tab-content,
+        table,
+        input,
+        select,
+        textarea {
+            background: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+
+        .card,
+        .container,
+        .tab-content {
+            box-shadow: 0 2px 12px #1113 !important;
+        }
+
+        .form-control,
+        input,
+        select,
+        textarea {
+            background: #23272b !important;
+            color: #e0e0e0 !important;
+            border: 1px solid #444 !important;
+        }
+
+        .form-control:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            background: #23272b !important;
+            color: #fff !important;
+            border-color: #0055cc !important;
+        }
+
+        .btn,
+        button {
+            background: #0055cc !important;
+            color: #fff !important;
+            border: none;
+        }
+
+        .btn:hover,
+        button:hover {
+            background: #003366 !important;
+        }
+
+        th,
+        td {
+            background: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+
+        .text-primary,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #4fc3f7 !important;
+        }
+
+        a,
+        .switch-link,
+        .logout-link,
+        .back-link {
+            color: #4fc3f7 !important;
+        }
+
+        .msg {
+            color: #ff5252 !important;
+        }
+
+        header {
+            background: #003366;
+            color: #fff;
+            padding: 30px 0 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px #e0e6ed;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            letter-spacing: 2px;
+            color: #d32f2f;
+        }
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .card {
+            border-radius: 10px;
+            padding: 0;
+            margin-bottom: 20px;
+            width: 300px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 24px #c3d0e6;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .file-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #ea3446;
+            margin-bottom: 8px;
+        }
+
+        .download-btn {
+            background: #0055cc;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 22px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .download-btn:hover {
+            background: #003366;
+        }
+
+        a.back-link {
+            display: inline-block;
+            margin: 20px 0 0 0;
+            text-decoration: underline;
+        }
+    </style>
+    <!-- Ensure translations.js exists in the public directory or update the path below -->
+    <!--  <script src="translations.js"></script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+            const translations = {
+                italia: {
+                    'files_for_brand': 'File per il marchio',
+                    'files_for_country': 'File per il paese',
+                    'no_files_found': 'Nessun file trovato per questo marchio.',
+                    'back_to_country_selection': '← Torna alla selezione del paese',
+                    'Opacimeter': 'Opacimetro',
+                    'Gas Analyser': 'Analizzatore di gas',
+                    'Simulator': 'Simulatore',
+                    'Rpmcounter': 'Contagiri',
+                    'in Country': 'nel Paese'
+                },
+                francia: {
+                    'files_for_brand': 'Fichiers pour la marque',
+                    'files_for_country': 'Fichiers pour le pays',
+                    'no_files_found': 'Aucun fichier trouvé pour cette marque.',
+                    'back_to_country_selection': '← Retour à la sélection du pays',
+                    'Opacimeter': 'Opacimètre',
+                    'Gas Analyser': 'Analyseur de gaz',
+                    'Simulator': 'Simulateur',
+                    'Rpmcounter': 'Compte-tours',
+                    'in Country': 'dans le pays'
+                },
+                germania: {
+                    'files_for_brand': 'Dateien für die Marke',
+                    'files_for_country': 'Dateien für das Land',
+                    'no_files_found': 'Keine Dateien für diese Marke gefunden.',
+                    'back_to_country_selection': '← Zurück zur Länderauswahl',
+                    'Opacimeter': 'Opazimeter',
+                    'Gas Analyser': 'Gasanalysator',
+                    'Simulator': 'Simulator',
+                    'Rpmcounter': 'Drehzahlmesser',
+                    'in Country': 'im Land'
+                },
+                spagna: {
+                    'files_for_brand': 'Archivos para la marca',
+                    'files_for_country': 'Archivos para el país',
+                    'no_files_found': 'No se encontraron archivos para esta marca.',
+                    'back_to_country_selection': '← Volver a la selección de país',
+                    'Opacimeter': 'Opacímetro',
+                    'Gas Analyser': 'Analizador de gases',
+                    'Simulator': 'Simulador',
+                    'Rpmcounter': 'Cuentarrevoluciones',
+                    'in Country': 'en el país'
+                }
+            };
+
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const brand = urlParams.get('brand');
+            const country = urlParams.get('country');
+            if (!brand || !country) {
+                window.location.href = '/';
+                return;
+            }
+            const res = await fetch('/files', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.status === 401) {
+                localStorage.removeItem('access_token');
+                window.location.href = '/login';
+                return;
+            }
+            const files = await res.json();
+            // Prima filtro per brand, poi per country
+            const userLang = country && country.toLowerCase();
+
+            let filtered = files.filter(f => f.brand === brand && (f.country === country || f.country === '*'));
+
+            // Raggruppa per categoria
+            const grouped = {};
+            filtered.forEach(f => {
+                const cat = f.Category || f.category || f.CATEGORY || 'Senza categoria';
+                if (!grouped[cat]) grouped[cat] = [];
+                grouped[cat].push(f);
+            });
+
+
+
+            // const userLang = country && country.toLowerCase();
+            document.getElementById('brand-title').textContent = translations[userLang]['files_for_brand'] + ': ' + brand
+                + ' ' + translations[userLang]['in Country'] + ': ' + country;
+            // document.getElementById('brand-title').textContent = translations[userLang]['files_for_brand'];
+            document.querySelector('.back-link').textContent = translations[userLang]['back_to_country_selection'];
+
+            const grid = document.getElementById('file-grid');
+            grid.innerHTML = '';
+            if (Object.keys(grouped).length === 0) {
+                grid.innerHTML = `<p>${translations[userLang]['no_files_found']}</p>`;
+            } else {
+                Object.entries(grouped).forEach(([cat, files]) => {
+                    const section = document.createElement('section');
+                    section.innerHTML = `<h2 class='mt-4 mb-3 text-primary'>${translations[userLang][cat]}</h2>`;
+                    const row = document.createElement('div');
+                    row.className = 'row grid';
+                    files.forEach(f => {
+                        const originalFileName = f.path ? f.path.split(/[/\\]/).pop() : f.name;
+                        const col = document.createElement('div');
+                        col.className = 'col-auto';
+                        col.innerHTML = `
+                            <div class='card h-100'>
+                                <div class='card-body'>
+                                    <div class='file-name'>${f.name}</div>
+                                    <div class='brand'>Version: ${f.version}</div>
+                                    <button class='download-btn btn btn-primary' data-filename="${f.name}" data-original-filename="${originalFileName}">Download</button>
+                                </div>
+                            </div>
+                        `;
+                        row.appendChild(col);
+                    });
+                    section.appendChild(row);
+                    grid.appendChild(section);
+                });
+            }
+            // Download handler
+            grid.addEventListener('click', async function (e) {
+                if (e.target.classList.contains('download-btn')) {
+                    const filename = e.target.getAttribute('data-filename');
+                    const originalFileName = e.target.getAttribute('data-original-filename') || filename;
+                    try {
+                        const response = await fetch(`/download/${encodeURIComponent(filename)}`, {
+                            headers: { 'Authorization': 'Bearer ' + token }
+                        });
+                        if (response.status === 401) {
+                            localStorage.removeItem('access_token');
+                            window.location.href = '/login';
+                            return;
+                        }
+                        if (!response.ok) {
+                            alert('Failed to download file.');
+                            return;
+                        }
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = originalFileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                            window.URL.revokeObjectURL(url);
+                            a.remove();
+                        }, 100);
+                    } catch (err) {
+                        alert('Error downloading file.');
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <h1 id="brand-title">Files for Brand</h1>
+    </header>
+    <div class='container'>
+        <div class='grid' id='file-grid'>
+            <!-- FILE_CARDS -->
+        </div>
+        <a class='back-link' href='/select_country'>← Back to Country Selection</a>
+    </div>
+</body>
+
+</html>
