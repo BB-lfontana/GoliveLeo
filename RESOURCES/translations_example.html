@@ -1,0 +1,46 @@
+<!-- Example: Using translations in a FastAPI-served HTML page -->
+<html>
+
+<head>
+    <title>Translations Example</title>
+    <script type="module">
+        import { translations } from './traduzioni.js';
+        window.translations = translations;
+        document.addEventListener('DOMContentLoaded', function () {
+            // Example: set language (could be dynamic)
+            const lang = 'it'; // or 'en', or get from user/browser
+            document.getElementById('title').textContent = translations[lang].files_for_brand;
+            document.getElementById('msg').textContent = translations[lang].no_files_found;
+        });
+    </script>
+    <style>
+        body {
+            background: #181a1b;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 60px auto;
+            background: #23272b;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px #1113;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4fc3f7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="title"></h1>
+        <div id="msg"></div>
+    </div>
+</body>
+
+</html>
