@@ -14,3 +14,8 @@ const tags = (f.tags || "").split(",").map(s => s.trim());
 if (tags.includes("itemToCheck")) {
     // item is present
 }
+
+            if (brand) {
+                filtered = filtered.filter(f => /^[a-3]{0,3}def*/.test(f.brand));
+                filtered = filtered.filter(f => typeof f.brand === 'string' && f.brand !== 'CASA' && f.country === 'OPEL');
+                document.getElementById('brand-title').textContent = 'Files for Brand: ' + brand;
