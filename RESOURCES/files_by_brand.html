@@ -199,28 +199,46 @@
             const userLang = country && country.toLowerCase();
 
             let filtered = files.filter(f =>
+            (
                 (
-                    ( //   ^FIAT                          FIAT              OPEL url
-                       (f.brand.startsWith('^') && f.brand.substring(1) !== brand)
-                          ||
-                     // ^FIAT      OPEL url
-                        ( (f.brand === brand) || (f.brand.includes('*')) || ( (f.brand || "").split(",").map(s => s.trim()).includes(brand) ) )
+                    (      //   ^FIAT
+                        (f.brand.startsWith('^')
+                            && (   // FIAT              OPEL url
+                                (f.brand.substring(1) !== brand)
+                                || // FIAT,LOTUS                                                OPEL url
+                                (!((f.brand.substring(1) || "").split(",").map(s => s.trim()).includes(brand)))
+                            )
+                        )
                     )
-                        &&
+                    ||
+                    // ^FIAT      OPEL url
+                    ((f.brand === brand) || (f.brand.includes('*')) || ((f.brand || "").split(",").map(s => s.trim()).includes(brand)))
+                )
+                &&
+                (
                     ( //   ^ITALIA                      ITALIA               BELGIO url
-                       (f.country.startsWith('^') && f.country.substring(1) !== country)
-                          ||
-                     // ^ITALIA      BELGIO url
-                     ( (f.country === country) || (f.country.includes('*')) || ( (f.country || "").split(",").map(s => s.trim()).includes(country) ) )
+                        (      //   ^FIAT
+                            (f.country.startsWith('^')
+                                && (   // FIAT              OPEL url
+                                    (f.country.substring(1) !== country)
+                                    || // FIAT,LOTUS                                                OPEL url
+                                    (!((f.country.substring(1) || "").split(",").map(s => s.trim()).includes(country)))
+                                )
+                            )
+                        )
+                        ||
+                        // ^ITALIA      BELGIO url
+                        ((f.country === country) || (f.country.includes('*')) || ((f.country || "").split(",").map(s => s.trim()).includes(country)))
                     )
                 )
+            )
             );
             console.log(filtered)
             // console.log('Lista = ', (f.brand || "").split(",").map(s => s.trim()) )
             // Raggruppa per categoria
             const grouped = {};
             filtered.forEach(f => {
-                const cat = f.Category || f.category || f.CATEGORY || 'Senza categoria';
+                const cat = f.category || 'Senza categoria';
                 if (!grouped[cat]) grouped[cat] = [];
                 grouped[cat].push(f);
             });

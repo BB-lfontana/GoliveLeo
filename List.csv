@@ -1,5 +1,5 @@
 "Name","Path","Version","Brand","Category","Country"
-OPA-100,"SX0100-08.pr2","1.128",^FIAT,"Opacimeter",BELGIO
+OPA-100,"SX0100-08.pr2","1.128","^FIAT,BMW","Opacimeter",BELGIO
 AGS-200,"SX0200-02.pro","X.332","OPEL","Gas_Analyser",*
 AGS-688,"SX0201-01b.pr2","1.322",*,"Gas_Analyser","GERMANIA,ITALIA"
 OmniProt.exe,"OmniProt.exe","2.39","BMW","Simulator",*
@@ -7,4 +7,4 @@ MGT-300EVO,"SX0300-54.pro","2.121","OPEL,FIAT","Rpmcounter",FRANCIA
 BMU-688,"SX0201-60b.pr2","1.322",FIAT,"Gas_Analyser",ITALIA
 VMD-400,"SX0100-08.pr2","1.322",*,"Opacimeter","FRANCIA,BELGIO"
 VMG-790,"SX0201-10b.pr2","1.322",LOTUS,"Gas_Analyser","GERMANIA,BELGIO"
-DC-7500,"SX7500-01-XX.pro","120.000",MASERATI,"Opacimeter",^ITALIA
+DC-7500,"SX7500-01-XX.pro","120.000",MASERATI,"Opacimeter","^ITALIA,GERMANIA"
