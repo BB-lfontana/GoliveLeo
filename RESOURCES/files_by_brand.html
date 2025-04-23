@@ -200,9 +200,19 @@
 
             let filtered = files.filter(f =>
                 (
-                    ( (f.brand === brand) || (f.brand.includes('*')) || ( (f.brand || "").split(",").map(s => s.trim()).includes(brand) ) )
+                    ( //   ^FIAT                          FIAT              OPEL url
+                       (f.brand.startsWith('^') && f.brand.substring(1) !== brand)
+                          ||
+                     // ^FIAT      OPEL url
+                        ( (f.brand === brand) || (f.brand.includes('*')) || ( (f.brand || "").split(",").map(s => s.trim()).includes(brand) ) )
+                    )
                         &&
-                    ( (f.country === country) || (f.country.includes('*'))  )
+                    ( //   ^ITALIA                      ITALIA               BELGIO url
+                       (f.country.startsWith('^') && f.country.substring(1) !== country)
+                          ||
+                     // ^ITALIA      BELGIO url
+                     ( (f.country === country) || (f.country.includes('*')) || ( (f.country || "").split(",").map(s => s.trim()).includes(country) ) )
+                    )
                 )
             );
             console.log(filtered)

@@ -7,6 +7,7 @@ export const translations = {
         Opacimeter: 'Opacimetro',
         Gas_Analyser: 'Analizzatore di gas',
         Simulator: 'Simulatore',
+        Decelerometer: 'Decelerometro',
         Rpmcounter: 'Contagiri',
         in_country: 'nel Paese'
     },
@@ -18,6 +19,7 @@ export const translations = {
         Opacimeter: 'Opacimètre',
         Gas_Analyser: 'Analyseur de gaz',
         Simulator: 'Simulateur',
+        Decelerometer: 'Decelerometer',
         Rpmcounter: 'Compte-tours',
         in_country: 'dans le pays'
     },
@@ -29,6 +31,7 @@ export const translations = {
         Opacimeter: 'Opacimètre',
         Gas_Analyser: 'Analyseur de gaz',
         Simulator: 'Simulateur',
+        Decelerometer: 'Decelerometer',
         Rpmcounter: 'Compte-tours',
         in_country: 'dans le pays'
     },
@@ -40,6 +43,7 @@ export const translations = {
         Opacimeter: 'Opazimeter',
         Gas_Analyser: 'Gasanalysator',
         Simulator: 'Simulator',
+        Decelerometer: 'Decelerometer',
         Rpmcounter: 'Drehzahlmesser',
         in_Country: 'im Land'
     },
@@ -51,6 +55,7 @@ export const translations = {
         Opacimeter: 'Opacímetro',
         Gas_Analyser: 'Analizador de gases',
         Simulator: 'Simulador',
+        Decelerometer: 'Decelerometer',
         Rpmcounter: 'Cuentarrevoluciones',
         in_country: 'en el país'
     }
