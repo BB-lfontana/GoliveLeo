@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends, status, Security, 
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.staticfiles import StaticFiles
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 import csv
@@ -14,6 +15,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+
 
 CSV_PATH = 'List.csv'
 templates = Jinja2Templates(directory="RESOURCES")
