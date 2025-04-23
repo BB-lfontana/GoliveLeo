@@ -198,9 +198,15 @@
             // console.log(country)
             const userLang = country && country.toLowerCase();
 
-            let filtered = files.filter(f => (  ( (f.brand === brand) || (f.brand.includes('*')) ) && ( (f.country === country) || (f.country.includes('*'))  ) ) );
+            let filtered = files.filter(f =>
+                (
+                    ( (f.brand === brand) || (f.brand.includes('*')) || ( (f.brand || "").split(",").map(s => s.trim()).includes(brand) ) )
+                        &&
+                    ( (f.country === country) || (f.country.includes('*'))  )
+                )
+            );
             console.log(filtered)
-
+            // console.log('Lista = ', (f.brand || "").split(",").map(s => s.trim()) )
             // Raggruppa per categoria
             const grouped = {};
             filtered.forEach(f => {

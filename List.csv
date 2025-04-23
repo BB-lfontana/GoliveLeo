@@ -1,8 +1,8 @@
 "Name","Path","Version","Brand","Category","Country"
-"OPA-100","C:\CLONE\AI\SX0100-08.pr2","1.128",FIAT,"Opacimeter",BELGIO
-"AGS-200","C:\CLONE\AI\SX0200-02.pro","X.332","FIAT","Gas_Analyser",FRANCIA
-"AGS-688","C:\CLONE\AI\Ags688IT_X64.exe","1.322","*","Gas_Analyser","GERMANIA"
-"C477","C:\CLONE\AI\SXC477_MGT300EVO.exe","2.39","FIAT","Simulator","*"
-"MGT-300EVO","C:\CLONE\AI\SX0300-54.pro","2.121","FIAT","Rpmcounter","FRANCIA"
-"AGS-688","C:\CLONE\AI\Ags688IT_X64.exe","1.322","FIAT","Gas_Analyser",ITALIA
-"VMG-790","Ags688IT_X64.exe","1.322","*","Gas_Analyser",*
+OPA-100,"SX0100-08.pr2","1.128",FIAT,"Opacimeter",BELGIO
+AGS-200,"SX0200-02.pro","X.332","OPEL","Gas_Analyser",*
+AGS-688,"Ags688IT_X64.exe","1.322","*","Gas_Analyser",GERMANIA
+C477,"SXC477_MGT300EVO.exe","2.39","BMW","Simulator",*
+MGT-300EVO,"SX0300-54.pro","2.121","OPEL,FIAT","Rpmcounter",FRANCIA
+AGS-688,"Ags688IT_X64.exe","1.322",FIAT,"Gas_Analyser",ITALIA
+VMG-790,"SX0201-10b.pr2","1.322",*,"Gas_Analyser",*

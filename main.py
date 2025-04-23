@@ -231,7 +231,8 @@ def download_file(name: str, user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail='File not found on disk')
     # Use the original filename from the Path field
     original_filename = os.path.basename(file_path)
-    return FileResponse(path=file_path, filename=original_filename, media_type='application/octet-stream')
+    base = os.path.join(os.path.dirname(os.path.abspath(CSV_PATH)), original_filename)
+    return FileResponse(path=base, filename=original_filename, media_type='application/octet-stream')
 
 @app.get('/register', response_class=HTMLResponse)
 def serve_register():
