@@ -62,7 +62,7 @@ def init_db():
 init_db()
 
 def get_user(username: str):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect('users.db', timeout=30)
     c = conn.cursor()
     c.execute('SELECT username, hashed_password, brand FROM users WHERE username=?', (username,))
     row = c.fetchone()
