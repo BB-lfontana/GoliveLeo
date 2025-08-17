@@ -1,0 +1,15 @@
+{
+    "servers": {
+        "sqlite": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "C:\\sqlite",
+                "run",
+                "mcp-server-sqlite",
+                "--db-path",
+                "C:\\CLONE\\AI\\users.db"
+            ]
+        }
+    }
+}

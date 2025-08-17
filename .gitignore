@@ -1,8 +1,16 @@
+# Python-generated files
 __pycache__/
-.env
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
 Ags688IT_X64.exe
+SXC477_MGT300EVO.exe
 SX0100-08.pr2
 SX0100-08-2_200.pro
 SX0200-02.pro
 SX0300-54.pro
-SXC477_MGT300EVO.exe

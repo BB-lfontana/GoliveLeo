@@ -137,7 +137,7 @@
         .file-name {
             font-size: 1.2em;
             font-weight: 700;
-            color: #ea3446;
+            color: #003366;
             margin-bottom: 8px;
         }
 
@@ -165,23 +165,18 @@
             text-decoration: underline;
         }
     </style>
-
-    <script type="module">
-        import { translations } from '/static/translations.js';
-
-        // console.log(translations.italia.files_for_brand)
-
+    <script src="./translations.js"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', async function () {
             const token = localStorage.getItem('access_token');
             if (!token) {
                 window.location.href = '/login';
                 return;
             }
-
             const urlParams = new URLSearchParams(window.location.search);
             const brand = urlParams.get('brand');
             const country = urlParams.get('country');
-            if (!brand || !country) {
+            if (!brand && !country) {
                 window.location.href = '/';
                 return;
             }
@@ -194,61 +189,68 @@
                 return;
             }
             const files = await res.json();
-            // Prima filtro per brand, poi per country
-            // console.log(country)
-            const userLang = country && country.toLowerCase();
-
-            let filtered = files.filter(f =>
-            (
-                (
-                    (      //   ^FIAT
-                        (f.brand.startsWith('^')
-                            && (   // FIAT              OPEL url
-                                (f.brand.substring(1) !== brand)
-                                || // FIAT,LOTUS                                                OPEL url
-                                (!((f.brand.substring(1) || "").split(",").map(s => s.trim()).includes(brand)))
-                            )
-                        )
-                    )
-                    ||
-                    // ^FIAT      OPEL url
-                    ((f.brand === brand) || (f.brand.includes('*')) || ((f.brand || "").split(",").map(s => s.trim()).includes(brand)))
-                )
-                &&
-                (
-                    ( //   ^ITALIA                      ITALIA               BELGIO url
-                        (      //   ^FIAT
-                            (f.country.startsWith('^')
-                                && (   // FIAT              OPEL url
-                                    (f.country.substring(1) !== country)
-                                    || // FIAT,LOTUS                                                OPEL url
-                                    (!((f.country.substring(1) || "").split(",").map(s => s.trim()).includes(country)))
-                                )
-                            )
-                        )
-                        ||
-                        // ^ITALIA      BELGIO url
-                        ((f.country === country) || (f.country.includes('*')) || ((f.country || "").split(",").map(s => s.trim()).includes(country)))
-                    )
-                )
-            )
-            );
-            console.log(filtered)
-            // console.log('Lista = ', (f.brand || "").split(",").map(s => s.trim()) )
+            let filtered = files;
+            if (brand) {
+                filtered = filtered.filter(f => f.brand === brand);
+                document.getElementById('brand-title').textContent = 'Files for Brand: ' + brand;
+            } else if (country) {
+                filtered = filtered.filter(f => (f.Country || f.country || f.COUNTRY) === country);
+                document.getElementById('brand-title').textContent = 'Files for Country: ' + country;
+            }
             // Raggruppa per categoria
             const grouped = {};
             filtered.forEach(f => {
-                const cat = f.category || 'Senza categoria';
+                const cat = f.Category || f.category || f.CATEGORY || 'Senza categoria';
                 if (!grouped[cat]) grouped[cat] = [];
                 grouped[cat].push(f);
             });
 
-
-
-            // const userLang = country && country.toLowerCase();
-            document.getElementById('brand-title').textContent = translations[userLang].files_for_brand + ': ' + brand
-                + ' ' + translations[userLang]['in_country'] + ': ' + country;
-
+            <!-- 
+            const translations = {
+                italia: {
+                    'files_for_brand': 'File per il marchio',
+                    'files_for_country': 'File per il paese',
+                    'no_files_found': 'Nessun file trovato per questo marchio.',
+                    'back_to_country_selection': '← Torna alla selezione del paese',
+                    'Opacimeter': 'Opacimetro',
+                    'Gas Analyser': 'Analizzatore di gas',
+                    'Simulator': 'Simulatore',
+                    'Rpmcounter': 'Contagiri'
+                },
+                francia: {
+                    'files_for_brand': 'Fichiers pour la marque',
+                    'files_for_country': 'Fichiers pour le pays',
+                    'no_files_found': 'Aucun fichier trouvé pour cette marque.',
+                    'back_to_country_selection': '← Retour à la sélection du pays',
+                    'Opacimeter': 'Opacimètre',
+                    'Gas Analyser': 'Analyseur de gaz',
+                    'Simulator': 'Simulateur',
+                    'Rpmcounter': 'Compteur de tours'
+                },
+                germania: {
+                    'files_for_brand': 'Dateien für die Marke',
+                    'files_for_country': 'Dateien für das Land',
+                    'no_files_found': 'Keine Dateien für diese Marke gefunden.',
+                    'back_to_country_selection': '← Zurück zur Länderauswahl',
+                    'Opacimeter': 'Opazimeter',
+                    'Gas Analyser': 'Gasanalysator',
+                    'Simulator': 'Simulator',
+                    'Rpmcounter': 'Drehzahlmesser'
+                },
+                spagna: {
+                    'files_for_brand': 'Archivos para la marca',
+                    'files_for_country': 'Archivos para el país',
+                    'no_files_found': 'No se encontraron archivos para esta marca.',
+                    'back_to_country_selection': '← Volver a la selección de país',
+                    'Opacimeter': 'Opacímetro',
+                    'Gas Analyser': 'Analizador de gases',
+                    'Simulator': 'Simulador',
+                    'Rpmcounter': 'Cuentarrevoluciones'
+                }
+            }; 
+            -->
+            const userLang = country && country.toLowerCase();
+            document.getElementById('brand-title').textContent = translations[userLang]['files_for_brand'];
             document.querySelector('.back-link').textContent = translations[userLang]['back_to_country_selection'];
 
             const grid = document.getElementById('file-grid');

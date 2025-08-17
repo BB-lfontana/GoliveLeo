@@ -94,14 +94,7 @@
         }
     </style>
     <script>
-        let userBrand = null;
         document.addEventListener('DOMContentLoaded', async function () {
-            // Recupera il brand dell'utente loggato
-            const token = localStorage.getItem('access_token');
-            if (token) {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                userBrand = payload.brand;
-            }
             const res = await fetch('/api/countries');
             if (!res.ok) return;
             const countries = await res.json();
@@ -116,9 +109,7 @@
         function goToCountry(e) {
             e.preventDefault();
             const country = document.getElementById('country-select').value;
-            if (country && userBrand) {
-                window.location.href = '/files_by_brand?brand=' + encodeURIComponent(userBrand) + '&country=' + encodeURIComponent(country);
-            }
+            if (country) window.location.href = '/files_by_brand?country=' + encodeURIComponent(country);
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
