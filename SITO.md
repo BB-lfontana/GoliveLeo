@@ -1,8 +1,57 @@
-# SITO.md
+# SITO.md - Documentazione Completa del Sistema GoliveLeo
+
+## Indice
+1. [Panoramica del Sistema](#panoramica-del-sistema)
+2. [Casi d'Uso Pratici](#casi-duso-pratici)
+3. [Funzionalità Utente](#funzionalità-utente)
+4. [Funzionalità Amministratore](#funzionalità-amministratore)
+5. [Architettura Tecnica](#architettura-tecnica)
+6. [Configurazione e Deployment](#configurazione-e-deployment)
+7. [Sicurezza](#sicurezza)
+8. [Endpoint API Principali](#endpoint-api-principali)
+9. [Esempi di Chiamate API](#esempi-di-chiamate-api)
+10. [Dipendenze Principali](#dipendenze-principali)
+11. [Note di Sviluppo](#note-di-sviluppo)
+12. [Struttura File Repository](#struttura-file-repository)
+13. [Supporto e Manutenzione](#supporto-e-manutenzione)
+
+---
 
 ## Panoramica del Sistema
 
 GoliveLeo è una piattaforma web di distribuzione file per strumenti diagnostici automotive. Il sistema gestisce l'accesso controllato a un catalogo di software diagnostici basato su brand automobilistici e paesi, con autenticazione utente e pannello amministrativo.
+
+### Caratteristiche Principali
+- **Controllo Accessi Granulare**: Filtraggio file per brand e paese
+- **Autenticazione Dual-Mode**: Sistemi JWT separati per utenti e amministratori
+- **Interfaccia Multilingua**: Supporto per 4 lingue (IT, FR, DE, ES)
+- **Database PostgreSQL**: Scalabile e performante
+- **API RESTful**: Endpoint moderni e ben documentati
+- **Sicurezza Avanzata**: Password hashing, token JWT, validazione input
+
+---
+
+## Casi d'Uso Pratici
+
+### Scenario 1: Tecnico Automotive che Accede ai File
+1. Un tecnico della **BMW** visita `http://localhost:8000`
+2. Si registra con username `tecnico_bmw`, password e seleziona brand "BMW"
+3. Effettua il login e vede solo i file diagnostici BMW
+4. Scarica il software diagnostico necessario per la diagnosi del veicolo
+5. Il sistema verifica che abbia accesso solo ai file del brand BMW
+
+### Scenario 2: Amministratore che Aggiunge un Nuovo Brand
+1. L'admin accede a `http://localhost:8000/admin_login`
+2. Inserisce le credenziali admin e ottiene il token JWT
+3. Nella dashboard admin (`/admin_manage`) clicca su "Aggiungi Brand"
+4. Inserisce "Tesla" come nuovo brand
+5. Ora gli utenti possono registrarsi selezionando "Tesla" come brand
+
+### Scenario 3: Distribuzione Internazionale
+1. L'admin aggiunge paesi: Italia, Germania, Francia, Spagna
+2. Il catalogo CSV (`List.csv`) contiene file specifici per ogni paese
+3. Un utente in Italia seleziona paese "Italia" e vede solo file localizzati
+4. Il sistema filtra automaticamente i file in base a brand + paese
 
 ---
 
@@ -116,31 +165,93 @@ country:
 ## Configurazione e Deployment
 
 ### Variabili d'Ambiente Richieste
-```
-DATABASE_URL=postgres://user:password@host:5432/dbname
-SECRET_KEY=chiave_jwt_utenti
-ADMIN_SECRET_KEY=chiave_jwt_admin
-DB_MIN_CONN=1 (opzionale)
-DB_MAX_CONN=10 (opzionale)
+
+#### Per l'applicazione principale (main.py)
+```bash
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+SECRET_KEY=chiave_jwt_utenti_molto_sicura
+ADMIN_SECRET_KEY=chiave_jwt_admin_molto_sicura
 ```
 
-### Installazione
+#### Per lo script di creazione admin (admin.py)
+```bash
+PG_HOST=localhost
+PG_PORT=5432
+PG_DATABASE=nome_database
+PG_USER=postgres
+PG_PASSWORD=password_postgres
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=password_admin_sicura
+```
+
+**Nota**: Puoi creare un file `.env` nella root del progetto con tutte queste variabili.
+
+### Guida Rapida all'Avvio
+
+#### 1. Installazione Dipendenze
 ```bash
 pip install -r requirements.txt
 ```
 
-### Avvio Applicazione
+#### 2. Configurazione Database PostgreSQL
+Assicurati di avere PostgreSQL installato e in esecuzione, poi crea un database:
+```bash
+psql -U postgres
+CREATE DATABASE goliveleodb;
+\q
+```
+
+#### 3. Configurazione File .env
+Crea un file `.env` nella root del progetto:
+```bash
+# Database per l'applicazione
+DATABASE_URL=postgresql://postgres:tuapassword@localhost:5432/goliveleodb
+
+# Chiavi JWT (genera chiavi sicure casuali)
+SECRET_KEY=genera_una_chiave_casuale_molto_lunga_e_sicura_123456
+ADMIN_SECRET_KEY=genera_un_altra_chiave_casuale_diversa_dalla_prima_654321
+
+# Configurazione PostgreSQL per admin.py
+PG_HOST=localhost
+PG_PORT=5432
+PG_DATABASE=goliveleodb
+PG_USER=postgres
+PG_PASSWORD=tuapassword
+
+# Credenziali primo admin
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=password_admin_molto_sicura
+```
+
+#### 4. Creazione Primo Amministratore
+```bash
+python admin.py
+```
+Output atteso: `Admin aggiunto con successo!`
+
+#### 5. Avvio Applicazione
 ```bash
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Inizializzazione Database
-- Le tabelle vengono create automaticamente all'avvio tramite `init_db()`
-- Per creare un utente admin: `python admin.py`
+#### 6. Accesso all'Applicazione
+- Interfaccia Utente: `http://localhost:8000`
+- Login Admin: `http://localhost:8000/admin_login`
+- Dashboard Admin: `http://localhost:8000/admin_manage`
+
+### Inizializzazione Automatica
+- Le tabelle del database vengono create automaticamente all'avvio tramite `init_db()` in main.py:243-271
+- Non è necessaria alcuna configurazione manuale del database
 
 ### Migrazione da SQLite
-- Script disponibile: `migrate_sqlite_to_postgres.py`
-- Migra dati esistenti da `users.db` a PostgreSQL
+Se hai un database SQLite esistente (`users.db`):
+```bash
+python migrate_sqlite_to_postgres.py
+```
+Questo script:
+- Crea le tabelle in PostgreSQL se non esistono
+- Copia tutti i dati da SQLite (users, admin, brand, country)
+- Gestisce automaticamente i conflitti su chiavi duplicate
 
 ---
 
@@ -195,6 +306,122 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 ---
 
+## Esempi di Chiamate API
+
+### Registrazione Utente
+```bash
+curl -X POST http://localhost:8000/register \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=tecnico_bmw&password=pass123&brand=BMW"
+```
+
+Risposta:
+```json
+{"msg": "User registered successfully"}
+```
+
+### Login Utente
+```bash
+curl -X POST http://localhost:8000/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=tecnico_bmw&password=pass123"
+```
+
+Risposta:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "brand": "BMW"
+}
+```
+
+### Ottenere Lista File (Autenticato)
+```bash
+curl -X GET http://localhost:8000/files \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+Risposta:
+```json
+[
+  {
+    "name": "BMW Diagnostic Tool v2.5",
+    "path": "/files/bmw/diagnostic_v2.5.exe",
+    "version": "2.5.0",
+    "brand": "BMW",
+    "category": "Diagnostics",
+    "country": "Italy"
+  }
+]
+```
+
+### Login Admin
+```bash
+curl -X POST http://localhost:8000/admin_token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=admin&password=admin_password"
+```
+
+Risposta:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer"
+}
+```
+
+### Aggiungere Nuovo Brand (Admin)
+```bash
+curl -X POST http://localhost:8000/api/brands \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Tesla"}'
+```
+
+Risposta:
+```json
+{"msg": "Brand added"}
+```
+
+### Ottenere Lista Brand
+```bash
+curl -X GET http://localhost:8000/api/brands
+```
+
+Risposta:
+```json
+["Audi", "BMW", "Mercedes", "Tesla", "Volkswagen"]
+```
+
+### Modificare Brand (Admin)
+```bash
+curl -X PUT http://localhost:8000/api/brands \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{"old_name": "Tesla", "new_name": "Tesla Motors"}'
+```
+
+Risposta:
+```json
+{"msg": "Brand updated"}
+```
+
+### Eliminare Brand (Admin)
+```bash
+curl -X DELETE http://localhost:8000/api/brands \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Tesla Motors"}'
+```
+
+Risposta:
+```json
+{"msg": "Brand deleted"}
+```
+
+---
+
 ## Dipendenze Principali
 
 - **fastapi** - Framework web
@@ -237,13 +464,15 @@ Il sistema è stato migrato da SQLite a PostgreSQL per:
 ├── main.py                          # Applicazione FastAPI principale
 ├── admin.py                         # Script creazione admin
 ├── migrate_sqlite_to_postgres.py   # Script migrazione database
+├── debug_bcrypt.py                  # Utility debug bcrypt
 ├── List.csv                         # Catalogo file
 ├── requirements.txt                 # Dipendenze Python
 ├── .env                            # Variabili d'ambiente (non in repo)
+├── .gitignore                       # File da ignorare in git
 ├── CLAUDE.md                        # Istruzioni per Claude Code
 ├── README.md                        # Documentazione setup
 ├── SECURITY.md                      # Policy di sicurezza
-├── SITO.md                          # Questo file
+├── SITO.md                          # Questo file - Documentazione funzionalità
 └── RESOURCES/
     ├── select_brand.html           # Selezione brand
     ├── select_country.html         # Selezione paese
