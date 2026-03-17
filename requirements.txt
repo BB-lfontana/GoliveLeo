@@ -1,5 +1,5 @@
 fastapi==0.115.12
-pyasn1==0.4.8
+pyasn1==0.6.3
 pydantic==2.11.3
 pydantic_core==2.33.1
 databases>=0.6.0
