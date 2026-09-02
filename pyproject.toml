@@ -20,8 +20,8 @@ dependencies = [
     "pydantic==2.11.3",
     "pydantic-core==2.33.1",
     "python-jose>=3.3.0",
-    "python-multipart>=0.0.20",
-    "setuptools>=40.0.0",
+    "python-multipart>=0.0.31",
+    "setuptools>=83.0.0",
     "starlette>=0.46.2",
     "uvicorn>=0.20.0",
 ]
